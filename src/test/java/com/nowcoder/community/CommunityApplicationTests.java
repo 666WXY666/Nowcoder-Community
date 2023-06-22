@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 @ContextConfiguration(classes = CommunityApplication.class)
 class CommunityApplicationTests implements ApplicationContextAware {
     private ApplicationContext applicationContext;
+
     @Autowired
     private SimpleDateFormat sdf;
 
@@ -43,8 +44,11 @@ class CommunityApplicationTests implements ApplicationContextAware {
         TestDao testDao = applicationContext.getBean(TestDao.class);
         System.out.println(testDao.select());
 
-        testDao = applicationContext.getBean("testNewImpl", TestDao.class);
+        testDao = applicationContext.getBean("testMyBatisImpl", TestDao.class);
         System.out.println(testDao.select());
+
+        SimpleDateFormat simpleDateFormat = applicationContext.getBean(SimpleDateFormat.class);
+        System.out.println(simpleDateFormat.format(System.currentTimeMillis()));
     }
 
     @Test

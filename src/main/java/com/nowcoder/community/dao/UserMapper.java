@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserMapper {
+    // 用mapper.xml的方式写SQL语句
     User selectById(int id);
 
     User selectByName(String username);
