@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class TestInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(TestInterceptor.class);
 
-    // 在Controller之前执行
+    // 在Controller的代码之前执行
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.debug("preHandle: " + handler.toString());
@@ -20,13 +20,13 @@ public class TestInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    // 在Controller之后执行
+    // 在Controller的代码之后执行
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         logger.debug("postHandle: " + handler.toString());
     }
 
-    // 在模板引擎之后执行
+    // 在模板引擎渲染之后执行
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         logger.debug("afterCompletion: " + handler.toString());
