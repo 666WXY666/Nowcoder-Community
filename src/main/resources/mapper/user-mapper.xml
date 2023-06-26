@@ -48,7 +48,7 @@
         where email = #{email}
     </select>
 
-    <insert id="insertUser" parameterType="User" keyProperty="id">
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
         <include refid="insertFields"/>
     </insert>
 

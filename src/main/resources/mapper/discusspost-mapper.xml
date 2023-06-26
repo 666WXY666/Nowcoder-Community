@@ -17,6 +17,11 @@
         from discuss_post
     </sql>
 
+    <sql id="insertFields">
+        insert into discuss_post(user_id, title, content, type, status, create_time, comment_count, score)
+        values (#{userId}, #{title}, #{content}, #{type}, #{status}, #{createTime}, #{commentCount}, #{score})
+    </sql>
+
     <!--查询帖子-->
     <select id="selectDiscussPosts" resultType="DiscussPost">
         <!--动态sql-->
@@ -42,5 +47,22 @@
         </if>
     </select>
 
+    <!--查询帖子详情-->
+    <select id="selectDiscussPostById" resultType="DiscussPost">
+        <include refid="selectFields"/>
+        where id = #{id}
+    </select>
+
+    <!--添加帖子-->
+    <insert id="insertDiscussPost" useGeneratedKeys="true" keyProperty="id" parameterType="DiscussPost">
+        <include refid="insertFields"/>
+    </insert>
+
+    <!--更新帖子评论数量-->
+    <update id="updateCommentCount">
+        update discuss_post
+        set comment_count = #{commentCount}
+        where id = #{id}
+    </update>
 
 </mapper>

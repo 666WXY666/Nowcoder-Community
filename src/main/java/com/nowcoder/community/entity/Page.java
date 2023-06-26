@@ -9,14 +9,11 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Page {
-    // 当前页码
-    private int current = 1;
-    // 显示上限行数
-    private int limit = 10;
-    // 数据总数(用于计算总页数)
-    private int rows;
-    // 查询路径(用于复用分页链接)
-    private String path;
+
+    private int current = 1;// 当前页码
+    private int limit = 10;// 显示上限行数
+    private int rows;// 数据总数（用于计算总页数）
+    private String path;// 查询路径（用于复用分页链接）
 
     public void setCurrent(int current) {
         if (current >= 1) {

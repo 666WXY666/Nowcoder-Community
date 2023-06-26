@@ -27,7 +27,6 @@ public class CommunityUtil {
 
     // 生成JSON字符串
     public static String getJsonString(int code, String msg, Map<String, Object> map) {
-
         JSONObject json = new JSONObject();
         json.put("code", code);
         json.put("msg", msg);
@@ -47,5 +46,13 @@ public class CommunityUtil {
     // 生成JSON字符串（重载）
     public static String getJsonString(int code) {
         return getJsonString(code, null, null);
+    }
+
+    // 测试
+    public static void main(String[] args) {
+        Map<String, Object> map = new java.util.HashMap<>();
+        map.put("name", "zhangsan");
+        map.put("age", 25);
+        System.out.println(getJsonString(0, "ok", map));
     }
 }

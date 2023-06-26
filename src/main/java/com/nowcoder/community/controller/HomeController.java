@@ -17,8 +17,10 @@ import java.util.Map;
 
 @Controller
 public class HomeController {
+
     @Autowired
     private DiscussPostService discussPostService;
+
     @Autowired
     private UserService userService;
 
@@ -42,5 +44,11 @@ public class HomeController {
         }
         model.addAttribute("discussPosts", discussPosts);
         return "index";
+    }
+
+    // 错误页面-GET
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    public String getErrorPage() {
+        return "/error/500";
     }
 }
