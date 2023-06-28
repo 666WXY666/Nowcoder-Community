@@ -6,6 +6,7 @@ import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
+import com.nowcoder.community.util.RedisKeyUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class LoginController implements CommunityConstant {
@@ -34,6 +37,9 @@ public class LoginController implements CommunityConstant {
 
     @Autowired
     private Producer kaptchaProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -91,14 +97,32 @@ public class LoginController implements CommunityConstant {
     }
 
     // 生成验证码-GET
+    // Session重构为Redis
     @RequestMapping(path = "/kaptcha", method = RequestMethod.GET)
-    public void getKaptcha(HttpServletResponse response, HttpSession session) {
+    public void getKaptcha(HttpServletResponse response/*, HttpSession session*/) {
         // 生成验证码
         String text = kaptchaProducer.createText();
         // 生成图片
         BufferedImage image = kaptchaProducer.createImage(text);
-        // 将验证码存入session
-        session.setAttribute("kaptcha", text);
+
+        // 将验证码存入session（重构）
+        // session.setAttribute("kaptcha", text);
+
+        // 验证码的归属（临时凭证，用于区分用户，这里不能用userId，因为用户还没登陆）
+        String kaptchaOwner = CommunityUtil.generateUUID();
+        // 将临时归属凭证存入Cookie
+        Cookie cookie = new Cookie("kaptchaOwner", kaptchaOwner);
+        // 设置Cookie的生存时间
+        cookie.setMaxAge(60);
+        // 设置Cookie的生效范围
+        cookie.setPath(contextPath);
+        // 将Cookie发送给客户端
+        response.addCookie(cookie);
+
+        // 将验证码存入Redis
+        String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+        redisTemplate.opsForValue().set(redisKey, text, 60, TimeUnit.SECONDS);
+
         // 将图片输出给浏览器
         response.setContentType("image/png");
         try {
@@ -110,6 +134,7 @@ public class LoginController implements CommunityConstant {
     }
 
     // 登录-POST
+    // Session重构为Redis
     // 注意这里的method = RequestMethod.POST，因为这里是提交表单，不是get请求
     // 只要method不重复，路径path可以重复
     // 注意这里如果是对象，会自动装载到model中
@@ -117,9 +142,18 @@ public class LoginController implements CommunityConstant {
     // 要么在动态htmlTemplate里使用thymeleaf的${param.username}获取
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(String username, String password, String code, boolean rememberme,
-                        Model model, HttpSession session, HttpServletResponse response) {
-        // 检查验证码
-        String kaptcha = (String) session.getAttribute("kaptcha");
+                        Model model/*, HttpSession session*/, HttpServletResponse response,
+                        @CookieValue("kaptchaOwner") String kaptchaOwner) {
+        // 检查验证码（重构）
+        // String kaptcha = (String) session.getAttribute("kaptcha");
+        String kaptcha = null;
+        // 从Cookie中获取验证码的归属
+        // 判断Cookie是否失效
+        if (StringUtils.isNotBlank(kaptchaOwner)) {
+            // 从Redis中获取验证码
+            String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+            kaptcha = (String) redisTemplate.opsForValue().get(redisKey);
+        }
         if (StringUtils.isBlank(code) || StringUtils.isBlank(kaptcha) || !code.equalsIgnoreCase(kaptcha)) {
             // 验证码错误，返回登录页面
             model.addAttribute("codeMsg", "验证码不正确!");
@@ -197,7 +231,7 @@ public class LoginController implements CommunityConstant {
             model.addAttribute("msg", "重置密码成功，正在前往登录页面，请重新登录!");
             model.addAttribute("target", "/login");
             return "/site/operate-result";
-            //            return "redirect:/login";
+            // return "redirect:/login";
         } else {
             // 重置密码失败，返回重置密码页面
             model.addAttribute("emailMsg", map.get("emailMsg"));

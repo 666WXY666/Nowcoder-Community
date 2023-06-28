@@ -4,6 +4,7 @@ import com.nowcoder.community.entity.LoginTicket;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
+@Deprecated // 重构，用Redis代替
 public interface LoginTicketMapper {
     // 用注解的方式写SQL语句，注意在SQL语句中的空格，自动拼接多个字符串成一个完整SQL语句
 
