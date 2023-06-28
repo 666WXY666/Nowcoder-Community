@@ -200,6 +200,7 @@ public class UserController implements CommunityConstant {
     }
 
     // 我的帖子-GET
+    // 注意，这里不能用@LoginRequired，因为有时候没登录可以看别人的帖子
     @RequestMapping(path = "/mypost/{userId}", method = RequestMethod.GET)
     public String getMyPost(@PathVariable("userId") int userId, Page page, Model model) {
         User user = userService.findUserById(userId);
@@ -231,6 +232,7 @@ public class UserController implements CommunityConstant {
     }
 
     // 我的回复-GET
+    // 注意，这里不能用@LoginRequired，因为有时候没登录可以看别人的回复
     @RequestMapping(path = "/myreply/{userId}", method = RequestMethod.GET)
     public String getMyReply(@PathVariable("userId") int userId, Page page, Model model) {
         User user = userService.findUserById(userId);

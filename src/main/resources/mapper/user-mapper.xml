@@ -16,7 +16,6 @@
                          create_time)
         values (#{username}, #{password}, #{salt}, #{email}, #{type}, #{status}, #{activationCode}, #{headerUrl},
                 #{createTime})
-
     </sql>
 
     <sql id="selectFields">
@@ -37,7 +36,7 @@
         <include refid="selectFields"/>
         where id = #{id}
     </select>
-
+    
     <select id="selectByName" resultType="User">
         <include refid="selectFields"/>
         where username = #{username}

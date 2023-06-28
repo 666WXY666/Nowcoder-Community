@@ -1,6 +1,7 @@
 $(function () {
     $("#sendBtn").click(send_letter);
     $(".close-message").click(delete_msg);
+    $(".close-notice").click(delete_notice);
 });
 
 function send_letter() {
@@ -33,6 +34,23 @@ function delete_msg() {
     var id = $(btn).prev().val();
     $.post(
         CONTEXT_PATH + "/letter/delete",
+        {"id": id},
+        function (data) {
+            data = $.parseJSON(data);
+            if (data.code === 0) {
+                $(btn).parents(".media").remove();
+            } else {
+                alert(data.msg);
+            }
+        }
+    );
+}
+
+function delete_notice() {
+    var btn = this;
+    var id = $(btn).prev().val();
+    $.post(
+        CONTEXT_PATH + "/notice/delete",
         {"id": id},
         function (data) {
             data = $.parseJSON(data);

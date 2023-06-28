@@ -1,8 +1,10 @@
 package com.nowcoder.community.controller;
 
 import com.nowcoder.community.annotation.LoginRequired;
+import com.nowcoder.community.entity.Event;
 import com.nowcoder.community.entity.Page;
 import com.nowcoder.community.entity.User;
+import com.nowcoder.community.event.EventProducer;
 import com.nowcoder.community.service.FollowService;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityConstant;
@@ -31,14 +33,26 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     // 关注-POST
     // 异步
     @LoginRequired
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
-        User user = hostHolder.getUser();
-        followService.follow(user.getId(), entityType, entityId);
+        int userId = hostHolder.getUser().getId();
+        followService.follow(userId, entityType, entityId);
+
+        // 触发关注事件
+        eventProducer.fireEvent(new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setUserId(userId)
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId));
+
         return CommunityUtil.getJsonString(0, "已关注");
     }
 
@@ -48,8 +62,9 @@ public class FollowController implements CommunityConstant {
     @RequestMapping(path = "/unfollow", method = RequestMethod.POST)
     @ResponseBody
     public String unfollow(int entityType, int entityId) {
-        User user = hostHolder.getUser();
-        followService.unfollow(user.getId(), entityType, entityId);
+        int userId = hostHolder.getUser().getId();
+        followService.unfollow(userId, entityType, entityId);
+        
         return CommunityUtil.getJsonString(0, "已取消关注");
     }
 

@@ -30,6 +30,8 @@ public class ServiceLogAspect {
     public void before(JoinPoint joinPoint) {
         // 通过RequestContextHolder获取request对象
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 如果request对象为空，说明不是web请求，不需要记录日志
+        // 例如：定时任务，异步任务（kafka消费者）等
         if (attributes == null) {
             return;
         }
