@@ -74,26 +74,30 @@ public class UserController implements CommunityConstant {
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
-            model.addAttribute("error", "您还没有选择图片!");
-            return "/site/setting";
+            model.addAttribute("msg", "您还没有选择图片!");
+            model.addAttribute("target", "/user/setting");
+            return "/site/operate-result";
         }
 
         String fileName = headerImage.getOriginalFilename();
         if (fileName == null || StringUtils.isBlank(fileName)) {
-            model.addAttribute("error", "您还没有选择图片!");
-            return "/site/setting";
+            model.addAttribute("msg", "您还没有选择图片!");
+            model.addAttribute("target", "/user/setting");
+            return "/site/operate-result";
         }
 
         int index = fileName.lastIndexOf(".");
         if (index == -1) {
-            model.addAttribute("error", "文件格式不正确!（只支持*.png/*.jpg/*.jepg）");
-            return "/site/setting";
+            model.addAttribute("msg", "文件格式不正确!（只支持*.png/*.jpg/*.jepg）");
+            model.addAttribute("target", "/user/setting");
+            return "/site/operate-result";
         }
 
         String suffix = fileName.substring(index);
         if (StringUtils.isBlank(suffix) || !".png".equals(suffix) && !".jpg".equals(suffix) && !".jpeg".equals(suffix)) {
-            model.addAttribute("error", "文件格式不正确!（只支持*.png/*.jpg/*.jepg）");
-            return "/site/setting";
+            model.addAttribute("msg", "文件格式不正确!（只支持*.png/*.jpg/*.jepg）");
+            model.addAttribute("target", "/user/setting");
+            return "/site/operate-result";
         }
 
         // 生成随机文件名
@@ -115,7 +119,7 @@ public class UserController implements CommunityConstant {
         userService.updateHeader(user.getId(), headerUrl);
 
         // 注册成功，返回重定向页面到首页
-        model.addAttribute("msg", "修改头像成功，正在返回主页！");
+        model.addAttribute("msg", "修改头像成功，正在返回主页!");
         model.addAttribute("target", "/index");
         return "/site/operate-result";
         //        return "redirect:/index";
