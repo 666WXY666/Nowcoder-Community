@@ -3,9 +3,9 @@ package com.nowcoder.community.dao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-@Repository("testNewImpl")
+@Repository("alphaNewImpl")
 @Primary
-public class TestNewImpl implements TestDao {
+public class AlphaNewImpl implements AlphaDao {
     @Override
     public String select() {
         return "new";

@@ -1,13 +1,14 @@
 package com.nowcoder.community.controller;
 
 import com.google.code.kaptcha.Producer;
-import com.nowcoder.community.annotation.LoginRequired;
+// import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.RedisKeyUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,10 @@ public class LoginController implements CommunityConstant {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    // 注入SecurityContextLogoutHandler这个Bean，用于退出登录
+    @Autowired
+    private SecurityContextLogoutHandler securityContextLogoutHandler;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -184,10 +191,14 @@ public class LoginController implements CommunityConstant {
     }
 
     // 退出登录-GET
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
-    public String logout(@CookieValue("ticket") String ticket) {
+    public String logout(@CookieValue("ticket") String ticket, HttpServletRequest request,
+                         HttpServletResponse response, Authentication authentication) {
         userService.logout(ticket);
+        // 重构，使用Spring Security
+        // 使用SecurityContextLogoutHandler清理SecurityContext
+        securityContextLogoutHandler.logout(request, response, authentication);
         // 退出登录，返回重定向页面到登录页面
         // 因为login有两个请求，一个是GET请求，一个是POST请求
         // 这里要重定向默认到/login的GET请求

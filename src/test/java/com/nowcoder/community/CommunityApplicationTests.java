@@ -1,7 +1,7 @@
 package com.nowcoder.community;
 
-import com.nowcoder.community.dao.TestDao;
-import com.nowcoder.community.service.TestService;
+import com.nowcoder.community.dao.AlphaDao;
+import com.nowcoder.community.service.AlphaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ class CommunityApplicationTests implements ApplicationContextAware {
     private SimpleDateFormat sdf;
 
     @Autowired
-    @Qualifier("testNewImpl")
-    private TestDao testDao;
+    @Qualifier("alphaNewImpl")
+    private AlphaDao alphaDao;
 
     @Autowired
-    private TestService testService;
+    private AlphaService alphaService;
 
     @Test
     void contextLoads() {
@@ -41,11 +41,11 @@ class CommunityApplicationTests implements ApplicationContextAware {
     public void testApplicationContext() {
         System.out.println(applicationContext);
 
-        TestDao testDao = applicationContext.getBean(TestDao.class);
-        System.out.println(testDao.select());
+        AlphaDao alphaDao = applicationContext.getBean(AlphaDao.class);
+        System.out.println(alphaDao.select());
 
-        testDao = applicationContext.getBean("testMyBatisImpl", TestDao.class);
-        System.out.println(testDao.select());
+        alphaDao = applicationContext.getBean("alphaMyBatisImpl", AlphaDao.class);
+        System.out.println(alphaDao.select());
 
         SimpleDateFormat simpleDateFormat = applicationContext.getBean(SimpleDateFormat.class);
         System.out.println(simpleDateFormat.format(System.currentTimeMillis()));
@@ -53,8 +53,8 @@ class CommunityApplicationTests implements ApplicationContextAware {
 
     @Test
     public void testDI() {
-        System.out.println(testDao);
-        System.out.println(testService);
+        System.out.println(alphaDao);
+        System.out.println(alphaService);
         System.out.println(sdf);
     }
 }

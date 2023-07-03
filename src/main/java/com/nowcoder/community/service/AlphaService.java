@@ -1,15 +1,19 @@
 package com.nowcoder.community.service;
 
 import com.nowcoder.community.dao.DiscussPostMapper;
-import com.nowcoder.community.dao.TestDao;
+import com.nowcoder.community.dao.AlphaDao;
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.util.CommunityUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -22,8 +26,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.Date;
 
 @Service
-public class TestService {
-    private TestDao td;
+public class AlphaService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AlphaService.class);
+    private AlphaDao alphaDao;
 
     @Autowired
     private UserMapper userMapper;
@@ -34,16 +40,17 @@ public class TestService {
     @Autowired
     private TransactionTemplate transactionTemplate;
 
+
     // 构造函数注入
-    public TestService(@Qualifier("testNewImpl") TestDao td) {
-        System.out.println("TestService");
-        this.td = td;
+    public AlphaService(@Qualifier("alphaNewImpl") AlphaDao alphaDao) {
+        System.out.println("AlphaService");
+        this.alphaDao = alphaDao;
     }
 
     // 在构造函数之后执行
     @PostConstruct
     public String init() {
-        return "hello test!" + td.select();
+        return "hello alpha!" + alphaDao.select();
     }
 
     // 在销毁之前执行
@@ -53,7 +60,7 @@ public class TestService {
     }
 
     public String find() {
-        return td.select();
+        return alphaDao.select();
     }
 
     // 事务测试（注解）
@@ -118,5 +125,18 @@ public class TestService {
                 return "ok";
             }
         });
+    }
+
+    // Spring线程池-注解方式
+    // @Async注解可以使该方法异步执行
+    @Async
+    public void execute1() {
+        logger.debug("execute1");
+    }
+
+    // 程序启动自动调用，不用手动调用
+    // @Scheduled(initialDelay = 10000, fixedRate = 1000)
+    public void execute2() {
+        logger.debug("execute2");
     }
 }

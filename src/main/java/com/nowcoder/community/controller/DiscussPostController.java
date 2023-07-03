@@ -10,7 +10,9 @@ import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.HostHolder;
+import com.nowcoder.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +44,11 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private EventProducer eventProducer;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     // 发布帖子-POST
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title, String content) {
@@ -72,6 +76,10 @@ public class DiscussPostController implements CommunityConstant {
                 .setEntityId(post.getId())
                 .setData("title", title)
                 .setData("content", content));
+
+        // 将帖子放入Redis缓存，等待定时任务计算帖子的分数
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, post.getId());
 
         // 报错的情况，将来统一处理
         return CommunityUtil.getJsonString(0, "发布成功！");
@@ -167,5 +175,83 @@ public class DiscussPostController implements CommunityConstant {
         // 将评论的显示列表存入model中
         model.addAttribute("comments", commentVoList);
         return "/site/discuss-detail";
+    }
+
+    // 置顶/取消置顶-POST
+    // 异步请求
+    @RequestMapping(path = "/top", method = RequestMethod.POST)
+    @ResponseBody
+    public String setTop(int id) {
+        // 获取帖子状态
+        DiscussPost post = discussPostService.findDiscussPostById(id);
+        // 置顶/取消置顶帖子
+        int type = post.getType() == 1 ? 0 : 1;
+        discussPostService.updateType(id, type);
+        // 返回的结果
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+
+        // 因为帖子更新了，要触发发帖事件
+        // 通过事件的发布者，将事件发布到kafka中
+        // 事件的消费者：Elasticsearch服务，将帖子存入Elasticsearch中
+        eventProducer.fireEvent(new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id));
+
+        // 返回结果
+        return CommunityUtil.getJsonString(0, null, map);
+    }
+
+    // 加精/取消加精-POST
+    // 异步请求
+    @RequestMapping(path = "/wonderful", method = RequestMethod.POST)
+    @ResponseBody
+    public String setWonderful(int id) {
+        // 获取帖子状态
+        DiscussPost post = discussPostService.findDiscussPostById(id);
+        // 加精/取消加精帖子
+        // 这里1表示加精，点击后恢复正常；2表示删除，0表示正常，点击后都加精
+        int status = post.getStatus() == 1 ? 0 : 1;
+        discussPostService.updateStatus(id, status);
+        // 返回的结果
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", status);
+
+        // 因为帖子更新了，要触发发帖事件
+        // 通过事件的发布者，将事件发布到kafka中
+        // 事件的消费者：Elasticsearch服务，将帖子存入Elasticsearch中
+        eventProducer.fireEvent(new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id));
+
+        // 计算帖子分数
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, id);
+        
+        // 返回结果
+        return CommunityUtil.getJsonString(0, null, map);
+    }
+
+    // 删除-POST
+    // 异步请求
+    @RequestMapping(path = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String setDelete(int id) {
+        // 删除帖子
+        discussPostService.updateStatus(id, 2);
+        // 因为帖子更新了，要触发删帖事件
+        // 通过事件的发布者，将事件发布到kafka中
+        // 事件的消费者：Elasticsearch服务，将帖子从Elasticsearch中删除
+        eventProducer.fireEvent(new Event()
+                .setTopic(TOPIC_DELETE)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id));
+        // 返回结果
+        return CommunityUtil.getJsonString(0);
     }
 }

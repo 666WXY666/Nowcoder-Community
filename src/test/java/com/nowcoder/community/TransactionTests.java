@@ -1,6 +1,6 @@
 package com.nowcoder.community;
 
-import com.nowcoder.community.service.TestService;
+import com.nowcoder.community.service.AlphaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,17 +10,17 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = CommunityApplication.class)
 public class TransactionTests {
     @Autowired
-    private TestService testService;
+    private AlphaService alphaService;
 
     @Test
     public void testSave1() {
-        Object obj = testService.save1();
+        Object obj = alphaService.save1();
         System.out.println(obj);
     }
 
     @Test
     public void testSave2() {
-        Object obj = testService.save2();
+        Object obj = alphaService.save2();
         System.out.println(obj);
     }
 }

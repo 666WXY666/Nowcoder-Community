@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import java.text.SimpleDateFormat;
 
 @Configuration
-public class TestConfig {
+public class AlphaConfig {
 
     @Bean
     // 这里返回值是Bean的类型，方法名是Bean的名字

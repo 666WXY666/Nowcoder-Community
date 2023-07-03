@@ -1,6 +1,6 @@
 package com.nowcoder.community.controller;
 
-import com.nowcoder.community.service.TestService;
+import com.nowcoder.community.service.AlphaService;
 import com.nowcoder.community.util.CommunityUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/test")
-public class TestController {
+public class AlphaController {
     /**
      * 关于idea一直提示的“不建议使用字段注入”：
      * 在Spring框架中，不建议使用字段注入的主要原因是它破坏了封装性和可测试性，并且使得类之间的依赖关系难以理解和维护。
@@ -27,7 +27,7 @@ public class TestController {
      * 此外，构造函数注入还有助于实现不可变性和线程安全性，因为依赖关系在类被创建时就被确定，并且不可更改。
      */
     @Autowired
-    private TestService ts;
+    private AlphaService alphaService;
 
     @RequestMapping("/hello")
     @ResponseBody
@@ -38,7 +38,7 @@ public class TestController {
     @RequestMapping("/data")
     @ResponseBody
     public String getData() {
-        return ts.find();
+        return alphaService.find();
     }
 
     @RequestMapping("/http")

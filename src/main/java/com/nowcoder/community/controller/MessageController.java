@@ -15,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;
@@ -38,7 +35,7 @@ public class MessageController implements CommunityConstant {
     private UserService userService;
 
     // 私信列表-GET
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/letter/list", method = RequestMethod.GET)
     public String getLetterList(Model model, Page page) {
         int userId = hostHolder.getUser().getId();
@@ -80,12 +77,12 @@ public class MessageController implements CommunityConstant {
     }
 
     // 私信详情-GET
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/letter/detail/{conversationId}", method = RequestMethod.GET)
-    public String getLetterDetail(@PathVariable("conversationId") String conversationId, Page page, int currentPage, Model mode) {
+    public String getLetterDetail(@PathVariable("conversationId") String conversationId, Page page, @RequestParam(name = "currentPage", defaultValue = "1") int currentPage, Model mode) {
         // 分页信息
         page.setLimit(5);
-        page.setPath("/letter/detail/" + conversationId);
+        page.setPath("/letter/detail/" + conversationId + "?currentPage=" + currentPage);
         page.setRows(messageService.findLetterCount(conversationId));
 
         // 私信列表
@@ -151,7 +148,7 @@ public class MessageController implements CommunityConstant {
 
     // 发送私信-POST
     // 异步请求
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/letter/send", method = RequestMethod.POST)
     @ResponseBody
     public String sendLetter(String toName, String content) {
@@ -183,7 +180,7 @@ public class MessageController implements CommunityConstant {
 
     // 删除私信-POST
     // 异步请求
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/letter/delete", method = RequestMethod.POST)
     @ResponseBody
     public String deleteLetter(int id) {
@@ -192,7 +189,7 @@ public class MessageController implements CommunityConstant {
     }
 
     // 通知列表-GET
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/notice/list", method = RequestMethod.GET)
     public String getNoticeList(Model model) {
         int userId = hostHolder.getUser().getId();
@@ -249,7 +246,7 @@ public class MessageController implements CommunityConstant {
     }
 
     // 通知详情-GET
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/notice/detail/{topic}", method = RequestMethod.GET)
     public String getNoticeDetail(@PathVariable("topic") String topic, Page page, Model model) {
         int userId = hostHolder.getUser().getId();
@@ -294,7 +291,7 @@ public class MessageController implements CommunityConstant {
 
     // 删除通知-POST
     // 异步请求
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/notice/delete", method = RequestMethod.POST)
     @ResponseBody
     public String deleteNotice(int id) {

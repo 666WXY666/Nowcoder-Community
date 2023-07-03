@@ -26,6 +26,15 @@ public class RedisKeyUtil {
     // 用户的前缀
     private static final String PREFIX_USER = "user";
 
+    // UV的前缀
+    private static final String PREFIX_UV = "uv";
+
+    // 活跃用户DAU的前缀
+    private static final String PREFIX_DAU = "dau";
+
+    // 帖子分数的前缀
+    private static final String PREFIX_POST = "post";
+
     // 获取某个实体的赞
     // like:entity:entityType:entityId -> set(userId)
     public static String getEntityLikeKey(int entityType, int entityId) {
@@ -41,13 +50,13 @@ public class RedisKeyUtil {
     // 获取某个用户的关注的实体的key
     // followee:userId:entityType -> zset(entityId, now)
     public static String getFolloweeKey(int userId, int entityType) {
-        return "followee" + SPLIT + userId + SPLIT + entityType;
+        return PREFIX_FOLLOWEE + SPLIT + userId + SPLIT + entityType;
     }
 
     // 获取某个实体拥有的粉丝的key
     // follower:entityType:entityId -> zset(userId, now)
     public static String getFollowerKey(int entityType, int entityId) {
-        return "follower" + SPLIT + entityType + SPLIT + entityId;
+        return PREFIX_FOLLOWER + SPLIT + entityType + SPLIT + entityId;
     }
 
     // 获取登录验证码的key
@@ -68,4 +77,33 @@ public class RedisKeyUtil {
         return PREFIX_USER + SPLIT + userId;
     }
 
+    // 获取单日UV的key
+    // uv:日期 -> long
+    public static String getUVKey(String date) {
+        return PREFIX_UV + SPLIT + date;
+    }
+
+    // 获取区间UV的key
+    // uv:开始日期:结束日期 -> long
+    public static String getUVKey(String startDate, String endDate) {
+        return PREFIX_UV + SPLIT + startDate + SPLIT + endDate;
+    }
+
+    // 获取单日活跃用户DAU的key
+    // dau:日期 -> long
+    public static String getDAUKey(String date) {
+        return PREFIX_DAU + SPLIT + date;
+    }
+
+    // 获取区间活跃用户DAU的key
+    // dau:开始日期:结束日期 -> long
+    public static String getDAUKey(String startDate, String endDate) {
+        return PREFIX_DAU + SPLIT + startDate + SPLIT + endDate;
+    }
+
+    // 获取需要更新帖子分数的帖子key
+    // post:score -> set(postId)
+    public static String getPostScoreKey() {
+        return PREFIX_POST + SPLIT + "score";
+    }
 }

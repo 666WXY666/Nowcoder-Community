@@ -32,7 +32,12 @@
                 and user_id = #{userId}
             </if>
         </where>
-        order by type desc, create_time desc
+        <if test="orderMode == 0">
+            order by type desc, create_time desc
+        </if>
+        <if test="orderMode == 1">
+            order by type desc, score desc, create_time desc
+        </if>
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
@@ -51,6 +56,7 @@
     <select id="selectDiscussPostById" resultType="DiscussPost">
         <include refid="selectFields"/>
         where id = #{id}
+        and status != 2
     </select>
 
     <!--添加帖子-->
@@ -62,6 +68,27 @@
     <update id="updateCommentCount">
         update discuss_post
         set comment_count = #{commentCount}
+        where id = #{id}
+    </update>
+
+    <!--更新帖子类型-->
+    <update id="updateType">
+        update discuss_post
+        set type = #{type}
+        where id = #{id}
+    </update>
+
+    <!--更新帖子状态-->
+    <update id="updateStatus">
+        update discuss_post
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <!--更新帖子分数-->
+    <update id="updateScore">
+        update discuss_post
+        set score = #{score}
         where id = #{id}
     </update>
 

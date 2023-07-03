@@ -2,12 +2,11 @@ package com.nowcoder.community.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.springframework.stereotype.Component;
 
 // 示例注释掉，因为这个切面是用来测试的，不是用来实际使用的
 //@Component
 //@Aspect
-public class TestAspect {
+public class AlphaAspect {
 
     // 切入点
     // 第一个*代表返回值，第二个*代表类，第三个*代表方法，..代表参数，com.nowcoder.community.service代表包

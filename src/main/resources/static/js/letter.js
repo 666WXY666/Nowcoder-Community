@@ -9,6 +9,14 @@ function send_letter() {
 
     var toName = $("#recipient-name").val();
     var content = $("#message-text").val();
+
+    // 发送AJAX请求之前，将CSRF令牌设置到请求的消息头中
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
     $.post(
         CONTEXT_PATH + "/letter/send",
         {"toName": toName, "content": content},
@@ -32,6 +40,14 @@ function send_letter() {
 function delete_msg() {
     var btn = this;
     var id = $(btn).prev().val();
+
+    // 发送AJAX请求之前，将CSRF令牌设置到请求的消息头中
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
     $.post(
         CONTEXT_PATH + "/letter/delete",
         {"id": id},
@@ -49,6 +65,14 @@ function delete_msg() {
 function delete_notice() {
     var btn = this;
     var id = $(btn).prev().val();
+
+    // 发送AJAX请求之前，将CSRF令牌设置到请求的消息头中
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
     $.post(
         CONTEXT_PATH + "/notice/delete",
         {"id": id},

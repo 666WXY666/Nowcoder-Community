@@ -34,7 +34,7 @@ public class DiscussPost {
     private int type; // 0-普通; 1-置顶;
 
     @Field(type = FieldType.Integer)
-    private int status; // 0-正常; 1-精华; 2-拉黑;
+    private int status; // 0-正常; 1-精华; 2-删除;
 
     @Field(type = FieldType.Date)
     private Date createTime;// 发布时间

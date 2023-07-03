@@ -72,7 +72,7 @@ public class MapperTests {
 
     @Test
     public void testSelectPosts() {
-        List<DiscussPost> posts = postMapper.selectDiscussPosts(149, 0, 10);
+        List<DiscussPost> posts = postMapper.selectDiscussPosts(149, 0, 10, 0);
         for (DiscussPost post : posts) {
             System.out.println(post);
         }

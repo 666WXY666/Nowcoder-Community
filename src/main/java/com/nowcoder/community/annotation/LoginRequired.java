@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(value = {ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated // 重构，用Spring Security代替
 public @interface LoginRequired {
 }

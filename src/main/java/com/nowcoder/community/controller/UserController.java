@@ -63,14 +63,14 @@ public class UserController implements CommunityConstant {
 
     // 个人设置页面-GET
     // 添加注解，表示该方法需要登录才能访问
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     public String getSettingPage() {
         return "/site/setting";
     }
 
     // 上传头像-POST
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
@@ -153,7 +153,7 @@ public class UserController implements CommunityConstant {
     }
 
     // 修改密码-POST
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/updatePassword", method = RequestMethod.POST)
     public String updatePassword(String oldPassword, String newPassword, Model model) {
         User user = hostHolder.getUser();
@@ -220,7 +220,7 @@ public class UserController implements CommunityConstant {
 
         // 帖子列表
         List<DiscussPost> discussList = discussPostService
-                .findDiscussPosts(userId, page.getOffset(), page.getLimit());
+                .findDiscussPosts(userId, page.getOffset(), page.getLimit(), 0);
         List<Map<String, Object>> discussVOList = new ArrayList<>();
         if (discussList != null) {
             for (DiscussPost post : discussList) {

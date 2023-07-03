@@ -9,8 +9,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class TestInterceptor implements HandlerInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(TestInterceptor.class);
+public class AlphaInterceptor implements HandlerInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(AlphaInterceptor.class);
 
     // 在Controller的代码之前执行
     @Override

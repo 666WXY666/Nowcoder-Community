@@ -38,7 +38,7 @@ public class FollowController implements CommunityConstant {
 
     // 关注-POST
     // 异步
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
@@ -58,13 +58,13 @@ public class FollowController implements CommunityConstant {
 
     // 取消关注-POST
     // 异步
-    @LoginRequired
+    // @LoginRequired
     @RequestMapping(path = "/unfollow", method = RequestMethod.POST)
     @ResponseBody
     public String unfollow(int entityType, int entityId) {
         int userId = hostHolder.getUser().getId();
         followService.unfollow(userId, entityType, entityId);
-        
+
         return CommunityUtil.getJsonString(0, "已取消关注");
     }
 
