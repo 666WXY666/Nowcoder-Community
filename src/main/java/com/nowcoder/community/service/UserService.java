@@ -1,6 +1,7 @@
 package com.nowcoder.community.service;
 
-import com.nowcoder.community.dao.LoginTicketMapper;
+//import com.nowcoder.community.dao.LoginTicketMapper;
+
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.LoginTicket;
 import com.nowcoder.community.entity.User;
@@ -58,10 +59,6 @@ public class UserService implements CommunityConstant {
 
     public User findUserByName(String username) {
         return userMapper.selectByName(username);
-    }
-
-    public User findUserByEmail(String email) {
-        return userMapper.selectByEmail(email);
     }
 
     // 注册
@@ -198,6 +195,10 @@ public class UserService implements CommunityConstant {
         String redisKey = RedisKeyUtil.getTicketKey(ticket);
         // 取出凭证
         LoginTicket loginTicket = (LoginTicket) redisTemplate.opsForValue().get(redisKey);
+        if (loginTicket == null) {
+            // 凭证不存在
+            return;
+        }
         // 设置为无效
         loginTicket.setStatus(1);
         // 存储回去

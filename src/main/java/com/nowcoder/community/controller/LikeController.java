@@ -1,6 +1,7 @@
 package com.nowcoder.community.controller;
 
-import com.nowcoder.community.annotation.LoginRequired;
+//import com.nowcoder.community.annotation.LoginRequired;
+
 import com.nowcoder.community.entity.Event;
 import com.nowcoder.community.event.EventProducer;
 import com.nowcoder.community.service.LikeService;

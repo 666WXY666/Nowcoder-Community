@@ -1,6 +1,7 @@
 package com.nowcoder.community.controller;
 
-import com.nowcoder.community.annotation.LoginRequired;
+//import com.nowcoder.community.annotation.LoginRequired;
+
 import com.nowcoder.community.entity.Comment;
 import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.Event;

@@ -17,9 +17,7 @@ public class SecurityConfig implements CommunityConstant {
     // 忽略静态资源的访问
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> {
-            web.ignoring().requestMatchers("/resources/**");
-        };
+        return web -> web.ignoring().requestMatchers("/resources/**");
     }
 
     // 授权

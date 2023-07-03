@@ -74,7 +74,7 @@ public class ShareController implements CommunityConstant {
             // 缓冲区
             byte[] buffer = new byte[1024];
             // 循环读取
-            int b = 0;
+            int b;
             while ((b = fis.read(buffer)) != -1) {
                 os.write(buffer, 0, b);
             }

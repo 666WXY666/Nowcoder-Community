@@ -1,6 +1,7 @@
 package com.nowcoder.community.controller;
 
-import com.nowcoder.community.annotation.LoginRequired;
+//import com.nowcoder.community.annotation.LoginRequired;
+
 import com.nowcoder.community.entity.Comment;
 import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.Page;
@@ -137,11 +138,11 @@ public class UserController implements CommunityConstant {
         try (// 读取文件
              FileInputStream fis = new FileInputStream(fileName);
              // 响应输出流
-             OutputStream os = response.getOutputStream();) {
+             OutputStream os = response.getOutputStream()) {
             // 缓冲区
             byte[] buffer = new byte[1024];
             // 记录每次读取的数据长度
-            int b = 0;
+            int b;
             // 循环读取
             while ((b = fis.read(buffer)) != -1) {
                 // 将缓冲区的数据输出到浏览器

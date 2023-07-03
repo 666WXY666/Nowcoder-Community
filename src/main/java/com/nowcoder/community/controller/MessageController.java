@@ -1,7 +1,7 @@
 package com.nowcoder.community.controller;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.nowcoder.community.annotation.LoginRequired;
+//import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.entity.Message;
 import com.nowcoder.community.entity.Page;
 import com.nowcoder.community.entity.User;
@@ -22,9 +22,7 @@ import java.util.*;
 
 @Controller
 public class MessageController implements CommunityConstant {
-
-    private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
-
+    
     @Autowired
     private MessageService messageService;
 

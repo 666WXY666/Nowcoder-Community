@@ -1,6 +1,7 @@
 package com.nowcoder.community.controller;
 
-import com.nowcoder.community.annotation.LoginRequired;
+//import com.nowcoder.community.annotation.LoginRequired;
+
 import com.nowcoder.community.entity.*;
 import com.nowcoder.community.event.EventProducer;
 import com.nowcoder.community.service.CommentService;
@@ -231,7 +232,7 @@ public class DiscussPostController implements CommunityConstant {
         // 计算帖子分数
         String redisKey = RedisKeyUtil.getPostScoreKey();
         redisTemplate.opsForSet().add(redisKey, id);
-        
+
         // 返回结果
         return CommunityUtil.getJsonString(0, null, map);
     }
