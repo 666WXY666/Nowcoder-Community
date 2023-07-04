@@ -110,7 +110,7 @@ public class AlphaController {
     public String getSchool(Model model) {
         model.addAttribute("name", "北京大学");
         model.addAttribute("age", 80);
-        return "/demo/view";
+        return "demo/view";
     }
 
     // response json（异步请求）

@@ -67,7 +67,7 @@ public class UserController implements CommunityConstant {
     // @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     public String getSettingPage() {
-        return "/site/setting";
+        return "site/setting";
     }
 
     // 上传头像-POST
@@ -77,28 +77,28 @@ public class UserController implements CommunityConstant {
         if (headerImage == null) {
             model.addAttribute("msg", "您还没有选择图片!");
             model.addAttribute("target", "/user/setting");
-            return "/site/operate-result";
+            return "site/operate-result";
         }
 
         String fileName = headerImage.getOriginalFilename();
         if (fileName == null || StringUtils.isBlank(fileName)) {
             model.addAttribute("msg", "您还没有选择图片!");
             model.addAttribute("target", "/user/setting");
-            return "/site/operate-result";
+            return "site/operate-result";
         }
 
         int index = fileName.lastIndexOf(".");
         if (index == -1) {
             model.addAttribute("msg", "文件格式不正确!（只支持*.png/*.jpg/*.jepg）");
             model.addAttribute("target", "/user/setting");
-            return "/site/operate-result";
+            return "site/operate-result";
         }
 
         String suffix = fileName.substring(index);
         if (StringUtils.isBlank(suffix) || !".png".equals(suffix) && !".jpg".equals(suffix) && !".jpeg".equals(suffix)) {
             model.addAttribute("msg", "文件格式不正确!（只支持*.png/*.jpg/*.jepg）");
             model.addAttribute("target", "/user/setting");
-            return "/site/operate-result";
+            return "site/operate-result";
         }
 
         // 生成随机文件名
@@ -122,7 +122,7 @@ public class UserController implements CommunityConstant {
         // 注册成功，返回重定向页面到首页
         model.addAttribute("msg", "修改头像成功，正在返回主页!");
         model.addAttribute("target", "/index");
-        return "/site/operate-result";
+        return "site/operate-result";
         //        return "redirect:/index";
     }
 
@@ -164,12 +164,12 @@ public class UserController implements CommunityConstant {
             // 注意这里不能直接重定向登录页面重新登陆，需要先登出，通过登出重定向到登录页面，否则会出现重复登陆的情况
             model.addAttribute("msg", "修改密码成功，正在前往登录页面，请重新登录!");
             model.addAttribute("target", "/logout");
-            return "/site/operate-result";
+            return "site/operate-result";
             //            return "redirect:/logout";
         } else {
             model.addAttribute("oldPasswordMsg", map.get("oldPasswordMsg"));
             model.addAttribute("newPasswordMsg", map.get("newPasswordMsg"));
-            return "/site/setting";
+            return "site/setting";
         }
     }
 
@@ -201,7 +201,7 @@ public class UserController implements CommunityConstant {
         }
         model.addAttribute("hasFollowed", hasFollowed);
 
-        return "/site/profile";
+        return "site/profile";
     }
 
     // 我的帖子-GET
@@ -233,7 +233,7 @@ public class UserController implements CommunityConstant {
         }
         model.addAttribute("discussPosts", discussVOList);
 
-        return "/site/my-post";
+        return "site/my-post";
     }
 
     // 我的回复-GET
@@ -265,6 +265,6 @@ public class UserController implements CommunityConstant {
         }
         model.addAttribute("comments", commentVOList);
 
-        return "/site/my-reply";
+        return "site/my-reply";
     }
 }

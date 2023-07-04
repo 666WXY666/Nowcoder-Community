@@ -90,7 +90,7 @@ public class FollowController implements CommunityConstant {
             }
         }
         model.addAttribute("users", userList);
-        return "/site/followee";
+        return "site/followee";
     }
 
     // 判断当前用户是否已关注该userId用户
@@ -123,6 +123,6 @@ public class FollowController implements CommunityConstant {
             }
         }
         model.addAttribute("users", userList);
-        return "/site/follower";
+        return "site/follower";
     }
 }

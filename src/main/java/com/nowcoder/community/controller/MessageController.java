@@ -71,7 +71,7 @@ public class MessageController implements CommunityConstant {
         int noticeUnreadCount = messageService.findNoticeUnreadCount(userId, null);
         model.addAttribute("noticeUnreadCount", noticeUnreadCount);
 
-        return "/site/letter";
+        return "site/letter";
     }
 
     // 私信详情-GET
@@ -115,7 +115,7 @@ public class MessageController implements CommunityConstant {
             messageService.readMessage(ids);
         }
 
-        return "/site/letter-detail";
+        return "site/letter-detail";
     }
 
     // 通过conversationId获取TargetId
@@ -211,7 +211,7 @@ public class MessageController implements CommunityConstant {
         int noticeUnreadCount = messageService.findNoticeUnreadCount(userId, null);
         model.addAttribute("noticeUnreadCount", noticeUnreadCount);
 
-        return "/site/notice";
+        return "site/notice";
     }
 
     // 根据message处理生成MessageVO
@@ -284,7 +284,7 @@ public class MessageController implements CommunityConstant {
             messageService.readMessage(ids);
         }
 
-        return "/site/notice-detail";
+        return "site/notice-detail";
     }
 
     // 删除通知-POST

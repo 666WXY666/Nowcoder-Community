@@ -175,7 +175,7 @@ public class DiscussPostController implements CommunityConstant {
         }
         // 将评论的显示列表存入model中
         model.addAttribute("comments", commentVoList);
-        return "/site/discuss-detail";
+        return "site/discuss-detail";
     }
 
     // 置顶/取消置顶-POST

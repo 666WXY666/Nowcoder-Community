@@ -60,6 +60,6 @@ public class SearchController implements CommunityConstant {
         page.setRows(searchResult == null ? 0 : (int) searchResult.getTotalElements());
         page.setLimit(10);
 
-        return "/site/search";
+        return "site/search";
     }
 }

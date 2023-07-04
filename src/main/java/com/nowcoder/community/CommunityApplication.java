@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CommunityApplication {
 
+    // es7之后解决了netty启动冲突问题，不需要这个方法了
     @PostConstruct
     public void init() {
         // 解决netty启动冲突问题

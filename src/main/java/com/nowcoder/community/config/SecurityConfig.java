@@ -4,8 +4,10 @@ import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -45,7 +47,8 @@ public class SecurityConfig implements CommunityConstant {
                         AUTHORITY_MODERATOR
                 ).requestMatchers(
                         "/discuss/delete",
-                        "/data/**"
+                        "/data/**",
+                        "/actuator/**"
                 ).hasAnyAuthority(
                         AUTHORITY_ADMIN
                 ).anyRequest().permitAll()
@@ -78,7 +81,8 @@ public class SecurityConfig implements CommunityConstant {
         // Security底层默认会拦截/logout请求，进行退出处理
         // 覆盖它默认的逻辑，才能执行我们自己的退出代码
         http.logout(logout -> logout.logoutUrl("/securitylogout"));
-        // 默认开启防止CSRF攻击
+        // 默认开启防止CSRF攻击，如果要部分关闭，用下面的配置
+        // http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.ignoringRequestMatchers("/actuator/**"));
         return http.build();
     }
 

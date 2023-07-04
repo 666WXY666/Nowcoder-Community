@@ -30,6 +30,13 @@ public class HomeController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    // 根路径-GET
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public String root() {
+        // 转发或重定向到主页
+        return "forward:/index";
+    }
+
     // 主页-GET
     @RequestMapping(path = "/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page, @RequestParam(name = "orderMode", defaultValue = "0") int orderMode) {
@@ -59,12 +66,12 @@ public class HomeController implements CommunityConstant {
     // 错误页面-GET
     @RequestMapping(path = "/error", method = RequestMethod.GET)
     public String getErrorPage() {
-        return "/error/500";
+        return "error/500";
     }
 
     // 拒绝访问页面-GET
     @RequestMapping(path = "/denied", method = RequestMethod.GET)
     public String getDeniedPage() {
-        return "/error/404";
+        return "error/404";
     }
 }

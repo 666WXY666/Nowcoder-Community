@@ -21,7 +21,7 @@ public class DataController {
     // 因为会有POST请求forward到这个路径，所以要同时支持GET和POST请求
     @RequestMapping(path = "/data", method = {RequestMethod.GET, RequestMethod.POST})
     public String getDataPage() {
-        return "/site/admin/data";
+        return "site/admin/data";
     }
 
     // 统计网站UV-POST
